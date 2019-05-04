@@ -1,12 +1,11 @@
 'scopeName': 'source.com'
 'name': 'COM'
-'fileTypes': ['com', 'coo', 'coom']
+'fileTypes': ['com']
 
 'patterns': [
   {
     'begin': '\\{'
     'end': '\\}'
-    'name': 'constant.numeric.com'
     'patterns': [
       {
         'begin': '\''
@@ -27,19 +26,32 @@
       },
 
       {
-        'match': '='
-        'name': 'entity.name.function.com'
-      },
+        'begin': '\"'
+        'beginCaptures':
+            '0':
+                'name': 'punctuation.definition.string.begin.com'
+        'end': '\"'
+        'endCaptures':
+            '0':
+                'name': 'punctuation.definition.string.end.com'
+        'name': 'string.quoted.double.com'
+        'patterns': [
+            {
+                'match': '\"'
+                'name': 'constant.character.escape.com'
+            }
+        ]
+      }
 
       {
         'match': '\\b(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))\\b'
+        'name': 'constant.numeric.com'
+      },
+
+      {
+        'match': '\\b(True|true|False|false|none|None|null|Null)\\b'
         'name': 'keyword.control.com'
       }
     ]
   },
-
-  {
-    'match': ';'
-    'name': 'entity.name.type.class.com'
-  }
 ]

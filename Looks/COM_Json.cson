@@ -1,0 +1,163 @@
+'scopeName': 'source.com'
+'name': 'COM'
+'fileTypes': ['com']
+
+'patterns': [
+  {
+    'include': '#Value'
+  }
+]
+
+'repository':
+  'Constant':
+    'match': '\\b(true|false|none|null|True|False|None|Null)\\b'
+    'name': 'constant.language.com'
+
+  'Number':
+    'match': '-?(?=[1-9]|0(?!\\d))\\d+(\\.\\d+)?([eE][+-]?\\d+)?'
+    'name': 'constant.numeric.com'
+
+  'Object':
+    'begin': '{'
+    'beginCaptures':
+      '0':
+        'name': 'punctuation.definition.dictionary.begin.com'
+    'end': '}'
+    'endCaptures':
+      '0':
+        'name': 'punctuation.definition.dictionary.end.com'
+    'name': 'meta.structure.dictionary.com'
+    'patterns': [
+      {
+        'begin': '(?=")'
+        'end': '(?<=")'
+        'name': 'meta.structure.dictionary.key.com'
+        'patterns': [
+          {
+            'include': '#String'
+          }
+
+          {
+            'include': '#DString'
+          }
+        ]
+      }
+
+      {
+        'begin': '(?=\')'
+        'end': '(?<=\')'
+        'name': 'meta.structure.dictionary.key.com'
+        'patterns': [
+          {
+            'include': '#String'
+          }
+
+          {
+            'include': '#DString'
+          }
+        ]
+      }
+
+      {
+        'begin': '='
+        'beginCaptures':
+          '0':
+            'name': 'punctuation.separator.dictionary.key-value.com'
+        'end': '(,)(?=[\\s\\n]*})|(,)|(?=})'
+        'endCaptures':
+          '1':
+            'name': 'invalid.illegal.trailing-dictionary-separator.com'
+          '2':
+            'name': 'punctuation.separator.dictionary.pair.com'
+        'name': 'meta.structure.dictionary.value.com'
+        'patterns': [
+          {
+            'include': '#Value'
+          }
+          {
+            'match': '[^\\s,]'
+            'name': 'invalid.illegal.expected-dictionary-separator.com'
+          }
+        ]
+      }
+
+      {
+        'match': '[^\\s}]'
+        'name': 'invalid.illegal.expected-dictionary-separator.com'
+      }
+    ]
+
+  'String':
+    'begin': '\''
+    'beginCaptures':
+      '0':
+        'name': 'punctuation.definition.string.begin.com'
+    'end': '\''
+    'endCaptures':
+      '0':
+        'name': 'punctuation.definition.string.end.com'
+    'name': 'string.quoted.single.com'
+    'patterns': [
+      {
+        'match': '''(?x)
+          \\\\                # a literal backslash
+          (                   # followed by
+            ["\\\\/bfnrt]     # one of these characters
+            |                 # or
+            u[0-9a-fA-F]{4}   # a u and four hex digits
+          )
+        '''
+        'name': 'constant.character.escape.com'
+      }
+      {
+        'match': '\\\\.'
+        'name': 'invalid.illegal.unrecognized-string-escape.com'
+      }
+    ]
+
+  'DString':
+    'begin': '"'
+    'beginCaptures':
+      '0':
+        'name': 'punctuation.definition.string.begin.com'
+    'end': '"'
+    'endCaptures':
+      '0':
+        'name': 'punctuation.definition.string.end.com'
+    'name': 'string.quoted.double.com'
+    'patterns': [
+      {
+        'match': '''(?x)
+          \\\\                # a literal backslash
+          (                   # followed by
+            ["\\\\/bfnrt]     # one of these characters
+            |                 # or
+            u[0-9a-fA-F]{4}   # a u and four hex digits
+          )
+        '''
+        'name': 'constant.character.escape.com'
+      }
+      {
+        'match': '\\\\.'
+        'name': 'invalid.illegal.unrecognized-string-escape.com'
+      }
+    ]
+
+  'Value':
+    'patterns': [
+      {
+        'include': '#String'
+      }
+
+      {
+        'include': '#DString'
+      }
+
+      {
+        'include': '#Constant'
+      }
+
+      {
+        'include': '#Number'
+      }
+    ]
